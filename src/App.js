@@ -1,7 +1,7 @@
 import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from 'urql';
 
-const FILMS_QUERY = gql`
+const FILMS_QUERY = `
   {
     launchesPast(limit: 10) {
       id
@@ -11,9 +11,13 @@ const FILMS_QUERY = gql`
 `;
 
 export default function App() {
-  const { data, loading, error } = useQuery(FILMS_QUERY);
+  const [result] = useQuery({
+    query: FILMS_QUERY,
+  });
 
-  if (loading) return "Loading...";
+  const { data, fetching, error } = result;
+
+  if (fetching) return "Loading...";
   if (error) return <pre>{error.message}</pre>
 
   return (
