@@ -1,16 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { createClient, Provider } from 'urql';
+import { QueryClient, QueryClientProvider } from "react-query";
 
-const client = createClient({
-  url: 'https://api.spacex.land/graphql/',
-});
+const client = new QueryClient();
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(
-  <Provider value={client}>
+  <QueryClientProvider client={client}>
     <App />
-  </Provider>,
+  </QueryClientProvider>,
   rootElement
 );

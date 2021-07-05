@@ -1,7 +1,9 @@
 import React from "react";
-import { useQuery } from 'urql';
+import { request, gql } from "graphql-request";
+import { useQuery } from "react-query";
 
-const FILMS_QUERY = `
+const endpoint = "https://api.spacex.land/graphql/";
+const FILMS_QUERY = gql`
   {
     launchesPast(limit: 10) {
       id
@@ -11,14 +13,12 @@ const FILMS_QUERY = `
 `;
 
 export default function App() {
-  const [result] = useQuery({
-    query: FILMS_QUERY,
+  const { data, isLoading, error } = useQuery("launches", () => {
+    return request(endpoint, FILMS_QUERY);
   });
 
-  const { data, fetching, error } = result;
-
-  if (fetching) return "Loading...";
-  if (error) return <pre>{error.message}</pre>
+  if (isLoading) return "Loading...";
+  if (error) return <pre>{error.message}</pre>;
 
   return (
     <div>
