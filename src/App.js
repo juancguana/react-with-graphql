@@ -14,13 +14,19 @@ const FILMS_QUERY = `
 
 export default function App() {
   const { data, isLoading, error } = useQuery("launches", () => {
-    return axios({
-      url: endpoint,
+    return fetch(endpoint, {
       method: "POST",
-      data: {
-        query: FILMS_QUERY
-      }
-    }).then(response => response.data.data);
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: FILMS_QUERY })
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error("Error fetching data");
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => data.data);
   });
 
   if (isLoading) return "Loading...";
