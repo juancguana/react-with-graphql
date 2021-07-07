@@ -1,9 +1,9 @@
 import React from "react";
-import { request, gql } from "graphql-request";
+import axios from "axios";
 import { useQuery } from "react-query";
 
 const endpoint = "https://api.spacex.land/graphql/";
-const FILMS_QUERY = gql`
+const FILMS_QUERY = `
   {
     launchesPast(limit: 10) {
       id
@@ -14,7 +14,13 @@ const FILMS_QUERY = gql`
 
 export default function App() {
   const { data, isLoading, error } = useQuery("launches", () => {
-    return request(endpoint, FILMS_QUERY);
+    return axios({
+      url: endpoint,
+      method: "POST",
+      data: {
+        query: FILMS_QUERY
+      }
+    }).then(response => response.data.data);
   });
 
   if (isLoading) return "Loading...";
